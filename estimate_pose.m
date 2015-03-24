@@ -31,10 +31,12 @@ end
 function [pos, eul] = estState(K,H)
 
 KinvH = K \ H;
-[U,~,V] = svd(KinvH);
+
+KinvHMod = [ KinvH(:,1:2), cross(KinvH(:,1), KinvH(:,2)) ];
+[U,~,V] = svd(KinvHMod);
 
 Rmid=[ 1,0,0;
-    0,1,0
+    0,1,0;
     0,0,det(U*V')];
 Rp = U*Rmid*V';
 
