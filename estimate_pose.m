@@ -21,42 +21,49 @@ function [pos, eul] = estimate_pose(sensor, varargin)
 %                  @(sensor) estimate_pose(sensor, your personal input arguments);
 %   pos - 3x1 position of the quadrotor in world frame
 %   eul - 3x1 euler angles of the quadrotor
-
+toPlot = false;
 params = varargin{1};
-worldCoords = tag2WorldCoords(sensor.id, params.tags);
-H = estHomographyWrapper(sensor, worldCoords);
-[pos, eul] = estState(params.K,H);
+worldCoords = tag2WorldCoords(sensor.id, params.tags, toPlot);
+H_world_in_cam = estHomographyWrapper(sensor, worldCoords );
+if toPlot
+    compareWorldCoords(sensor, params.tags,worldCoords, HH_world_in_cam);
+end
+[pos, eul] = estState(params.K,H_world_in_cam);
 end
 
-function [pos, eul] = estState(K,H)
+function [pos, eul] = estState(K,H_world_in_cam)
 
-KinvH = K \ H;
+KinvH = K \ H_world_in_cam;
 
 KinvHMod = [ KinvH(:,1:2), cross(KinvH(:,1), KinvH(:,2)) ];
 [U,~,V] = svd(KinvHMod);
-
+% V = V';
 Rmid=[ 1,0,0;
     0,1,0;
     0,0,det(U*V')];
-Rp = U*Rmid*V';
+% det(Rmid)
+R_w_in_c = U*Rmid*V';
 
-T = KinvH(:,3)/norm(KinvH(:,1));
+T_w_in_c = KinvH(:,3)/norm(KinvH(:,1));
 
-R = Rp;
-pos = T;  
-% [R,pos]=cam2rob(Rp, T);
-[r, p, y] = rotmat2eul(R);
-% TODO
-%eul =[y;r;p];
+R = R_w_in_c;
+pos = T_w_in_c;
+[R,pos]=cam2rob(R_w_in_c, T_w_in_c);
+[r, p, y] = rotmat2eul(R_w_in_c);
 eul = [r;p;y];
 end
 
 function [R,p]=cam2rob(Rp, T)
-Hcam = [Rp,     T;
+H_w_in_c = [Rp,     T;
        0,0,0,  1];
-HcamInRob = [rotMatZ(-(pi/4)),[0, 0, 0.015]';
-           0,0,0           ,   1];
-Hrob = HcamInRob*Hcam;
-R=Hrob(1:3,1:3);
-p = Hrob(1:3,4);
+   
+cp = cos(pi/4);
+H_c_in_r = [  cp,   -cp,    0        0;
+             -cp,   -cp,    0,       0;
+              0,     0,    -1,     0.03;
+              0,     0,     0,       1];
+H_w_in_r = H_c_in_r*H_w_in_c;
+H_r_in_w = inv(H_w_in_r);
+R=H_r_in_w(1:3,1:3);
+p = H_r_in_w(1:3,4);
 end

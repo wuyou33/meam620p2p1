@@ -1,12 +1,18 @@
 
 plotnames = {' x ',' y ', ' z ', ' roll ', ' pitch ', ' yaw ' };
 est = [pos;eul];
+figure;
 for i=1:size(est,1)
    
-    figure
+    if i==4
+        figure;
+    end
+    
     if i<=3
+        subplot(3,1,i)
         plot(time,vicon(i,:),'b-');
     else
+        subplot(3,1,i-3)
         plot(time,rad2deg(vicon(i,:)),'b-');
     end
     hold on

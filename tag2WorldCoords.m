@@ -1,4 +1,4 @@
-function wc = tag2WorldCoords(tags, tagMat)
+function wc = tag2WorldCoords(tags, tagMat, toPlot)
     
     n = length(tags);
     wc.p0 = zeros(2,n);
@@ -9,13 +9,18 @@ function wc = tag2WorldCoords(tags, tagMat)
 
     for i = 1:n
         [wc.p0(:,i),wc.p1(:,i),wc.p2(:,i),wc.p3(:,i),wc.p4(:,i)] = ...
-                            computeWC(tags(i), tagMat);
+                            computeWC(tags(i), tagMat, toPlot);
     end
+    
 end
 
-function [p0,p1,p2,p3,p4] = computeWC(tag, tagMat)
-    d = 0.152;
-    dex = 0.178-d;
+function [p0,p1,p2,p3,p4] = computeWC(tag, tagMat,toPlot)
+    d = (0.152);
+    dex = (0.178-d);
+    if toPlot
+        d = d*100;
+        dex = dex*100;
+    end
     p4 = [0;0];
     [i,j] = find(tagMat==tag);
     
