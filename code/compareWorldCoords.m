@@ -9,7 +9,7 @@ function compareWorldCoords(sensor, tags, wc_act, H)
     xySrcT = bsxfun(@rdivide, xySrcT(1:2,:), xySrcT(3,:));
     xySrcT = xySrcT';
     x = 0:107;
-    wc_grid = tag2WorldCoords(x,tags);
+    wc_grid = tag2WorldCoords(x,tags, true);
     figure(88);
     clf(88)
     subplot(2,2,1)

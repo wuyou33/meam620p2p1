@@ -15,7 +15,8 @@ worldPts = [wc.p0, wc.p1, wc.p2, wc.p3, wc.p4]';
 xySrc = worldPts;
 xyDest = imPts;
 
-H = est_homography(xyDest(:,1), xyDest(:,2), xySrc(:,1), xySrc(:,2));
+H = est_homography_mine(xyDest(:,1), xyDest(:,2), xySrc(:,1), xySrc(:,2));
+
 % xyDestH = [ xyDest, ones(length(xyDest),1)]';
 % xyDesT = (inv(H)*xyDestH)
 % xyDesT = bsxfun(@rdivide, xyDesT(1:2,:), xyDesT(3,:));
