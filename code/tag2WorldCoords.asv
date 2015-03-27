@@ -1,17 +1,16 @@
-function wc = tag2WorldCoords(tags, tagMat)
+function wc = tag2WorldCoords(tags, tagMat,isFirst)
 
     persistent lookup
     if isempty(lookup)
-        maxId = max(tagMat(:));
+        maxId = max(tagMat);
         lookup.p0 = zeros(2,maxId+1);
         lookup.p1 = zeros(2,maxId+1);
         lookup.p2 = zeros(2,maxId+1);
         lookup.p3 = zeros(2,maxId+1);
         lookup.p0 = zeros(2,maxId+1);
-        for i = 0:maxId
-        j = i+1;
-        [lookup.p0(:,j),lookup.p1(:,j),lookup.p2(:,j),lookup.p3(:,j),lookup.p4(:,j)] = ...
-                            computeWC(i, tagMat);
+        for i = 1:,
+        [wc.p0(:,i),wc.p1(:,i),wc.p2(:,i),wc.p3(:,i),wc.p4(:,i)] = ...
+                            computeWC(tags(i), tagMat);
         end
         
     end
@@ -24,11 +23,8 @@ function wc = tag2WorldCoords(tags, tagMat)
     wc.p4 = zeros(2,n);
 
     for i = 1:n
-        wc.p0(:,i)= lookup.p0(:,tags(i)+1);
-        wc.p1(:,i)= lookup.p1(:,tags(i)+1);
-        wc.p2(:,i)= lookup.p2(:,tags(i)+1);
-        wc.p3(:,i)= lookup.p3(:,tags(i)+1);
-        wc.p4(:,i)= lookup.p4(:,tags(i)+1);
+        [wc.p0(:,i),wc.p1(:,i),wc.p2(:,i),wc.p3(:,i),wc.p4(:,i)] = ...
+                            computeWC(tags(i), tagMat);
     end
     
 end
