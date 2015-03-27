@@ -50,15 +50,12 @@ Rmid =  [   1,  0,    0;
             0,  0,  det(U*V')
         ];
 % det(Rmid)
-R_w_in_c = U*Rmid*V'
+R_w_in_c = U*Rmid*V';
 
 T_w_in_c = KinvH(:,3)/norm(KinvH(:,1));
 
-R = R_w_in_c;
-pos = T_w_in_c;
 [R,pos]=cam2rob(R_w_in_c, T_w_in_c);
-R
-[r, p, y] = rotmat2eul(R)
+[r, p, y] = rotmat2eul(R');
 eul = [r;p;y];
 end
 

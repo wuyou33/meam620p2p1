@@ -3,13 +3,13 @@ clear
 close all
 addpath('../data')
 datasets = {};
-%datasets{1} = 'studentdata1.mat';
-datasets{1} = 'studentdata4.mat';
-datasets{2} = 'studentdata9.mat';
+datasets{1} = 'studentdata1.mat';
+datasets{2} = 'studentdata4.mat';
+datasets{3} = 'studentdata9.mat';
 init_script
 
 
-for i = 1: 1%length(datasets)
+for i = 1: length(datasets)
     
     load(datasets{i});
 %      visualizePose(vicon,time,strcat(' Vicon, DataSet : ' ,datasets{i} ));
